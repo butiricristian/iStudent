@@ -11,10 +11,7 @@ import ro.ubb.istudent.dto.Dto;
  */
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class RatingDto<T extends Rating> implements Dto {
+public abstract class RatingDto<T> implements Dto {
     private Long id;
     private T subject;
     private UserDto user;
