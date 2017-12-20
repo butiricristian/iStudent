@@ -1,15 +1,16 @@
 package ro.ubb.service;
 
 import org.springframework.stereotype.Service;
-import ro.ubb.dto.NewsAgeStatisticsDto;
+import ro.ubb.dto.AgeAverageRatingDto;
+import ro.ubb.dto.converter.AgeAverageRatingConverter;
+import ro.ubb.model.AgeAverageRating;
 import ro.ubb.model.NewsRating;
 import ro.ubb.model.User;
 import ro.ubb.service.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -17,8 +18,9 @@ import java.util.stream.Collectors;
 public class StatisticsService {
 
     Utils utils = new Utils();
+    AgeAverageRatingConverter converter = new AgeAverageRatingConverter();
 
-    public NewsAgeStatisticsDto statisticsFromStudentsYoungerThan(int maxAge) {
+    public List<AgeAverageRatingDto> statisticsFromStudentsYoungerThan(int maxAge) {
         List<NewsRating> newsRatingList = utils.populateNewsRating(utils.populateUsers());
 
         Predicate<NewsRating> ageFilter = newsRating -> {
@@ -26,12 +28,12 @@ public class StatisticsService {
             return user.getAge() < maxAge;
         };
 
-        Map<Integer, Double> ageStatistics = statisticsGenerator(newsRatingList, ageFilter);
-        return NewsAgeStatisticsDto.builder().ageStatistics(ageStatistics).build();
+        List<AgeAverageRating> ageStatistics = statisticsGenerator(newsRatingList, ageFilter);
+        return converter.mapToDTOs(ageStatistics);
     }
 
 
-    public NewsAgeStatisticsDto statisticsFromStudentsOlderThan(int minAge) {
+    public List<AgeAverageRatingDto> statisticsFromStudentsOlderThan(int minAge) {
         List<NewsRating> newsRatingList = utils.populateNewsRating(utils.populateUsers());
 
         Predicate<NewsRating> ageFilter = newsRating -> {
@@ -39,12 +41,12 @@ public class StatisticsService {
             return user.getAge() > minAge;
         };
 
-        Map<Integer, Double> ageStatistics = statisticsGenerator(newsRatingList, ageFilter);
-        return NewsAgeStatisticsDto.builder().ageStatistics(ageStatistics).build();
+        List<AgeAverageRating> ageStatistics = statisticsGenerator(newsRatingList, ageFilter);
+        return converter.mapToDTOs(ageStatistics);
     }
 
 
-    public NewsAgeStatisticsDto statisticsFromStudentsAgedBetween(int age1, int age2) {
+    public List<AgeAverageRatingDto> statisticsFromStudentsAgedBetween(int age1, int age2) {
         List<NewsRating> newsRatingList = utils.populateNewsRating(utils.populateUsers());
 
         Predicate<NewsRating> ageFilter = newsRating -> {
@@ -52,18 +54,18 @@ public class StatisticsService {
             return userAge > age1 && userAge < age2;
         };
 
-        Map<Integer, Double> ageStatistics = statisticsGenerator(newsRatingList, ageFilter);
-        return NewsAgeStatisticsDto.builder().ageStatistics(ageStatistics).build();
+        List<AgeAverageRating> ageStatistics = statisticsGenerator(newsRatingList, ageFilter);
+        return converter.mapToDTOs(ageStatistics);
     }
 
-    private Map<Integer, Double> statisticsGenerator(List<NewsRating> newsRatingList, Predicate<NewsRating> p) {
-        Map<Integer, Double> averageRatings = new HashMap<>();
+    private List<AgeAverageRating> statisticsGenerator(List<NewsRating> newsRatingList, Predicate<NewsRating> p) {
+        List<AgeAverageRating> averageRatings = new ArrayList<>();
 
         List<NewsRating> filteredNewsRatingByAgeGroup = filteredNewsRatings(newsRatingList, p);
 
         extractAges(filteredNewsRatingByAgeGroup).stream().forEach(age -> {
             Double average = averageRatingFromStudentsWithAge(filteredNewsRatingByAgeGroup, age);
-            averageRatings.put(age, average);
+            averageRatings.add(new AgeAverageRating(age, average));
         });
 
         return averageRatings;
@@ -96,6 +98,6 @@ public class StatisticsService {
 
         long no = ratingsFromStudentsWithAge.size();
         double sum = ratingsFromStudentsWithAge.stream().map(newsRating -> newsRating.getScore()).mapToDouble(i -> i).sum();
-        return utils.round(sum/no,2);
+        return utils.round(sum / no, 2);
     }
 }
