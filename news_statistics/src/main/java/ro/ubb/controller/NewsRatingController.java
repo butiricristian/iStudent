@@ -1,4 +1,4 @@
-package ro.ubb.rest;
+package ro.ubb.controller;
 
 import ro.ubb.dto.rating.NewsRatingsDto;
 import ro.ubb.dto.statistic.NewsCountryStatisticsDto;
