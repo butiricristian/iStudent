@@ -51,7 +51,6 @@ allprojects {
         compile('org.springframework.boot:spring-boot-starter-data-mongodb')
         compile("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
         compile group: 'com.rabbitmq', name: 'amqp-client', version: '5.0.0'
-        compileOnly 'org.projectlombok:lombok:1.16.20'
 
         runtime('com.h2database:h2')
         runtime('mysql:mysql-connector-java')
