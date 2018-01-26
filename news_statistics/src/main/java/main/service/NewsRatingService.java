@@ -9,6 +9,4 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class NewsRatingService {
     @Autowired
     private NewsRatingRepository newsRatingRepository;
-
-
 }
