@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 public class AveragesService {
 
-
     public List<AverageDto> getSimpleMovingAverages(List<Pair<Date, List<Double>>> ratingsPerDates) {
         List<AverageDto> simpleMovingAverages;
         simpleMovingAverages = ratingsPerDates.stream()
