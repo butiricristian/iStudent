@@ -1,12 +1,12 @@
 package ro.ubb.dto.converter;
 
-import ro.ubb.dto.AgeAverageRatingDto;
+import ro.ubb.dto.AgeAverageRatingDTO;
 import ro.ubb.model.AgeAverageRating;
 
-public class AgeAverageRatingConverter extends Converter<AgeAverageRating, AgeAverageRatingDto> {
+public class AgeAverageRatingConverter extends Converter<AgeAverageRating, AgeAverageRatingDTO> {
     @Override
-    public AgeAverageRatingDto getDTOInstance() {
-        return new AgeAverageRatingDto();
+    public AgeAverageRatingDTO getDTOInstance() {
+        return new AgeAverageRatingDTO();
     }
 
     @Override
@@ -15,13 +15,13 @@ public class AgeAverageRatingConverter extends Converter<AgeAverageRating, AgeAv
     }
 
     @Override
-    protected void mapEntityToDTOFields(AgeAverageRating entity, AgeAverageRatingDto dto) {
+    protected void mapEntityToDTOFields(AgeAverageRating entity, AgeAverageRatingDTO dto) {
         dto.setAge(entity.getAge());
         dto.setRating(entity.getRating());
     }
 
     @Override
-    protected void mapDTOToEntityFields(AgeAverageRatingDto dto, AgeAverageRating entity) {
+    protected void mapDTOToEntityFields(AgeAverageRatingDTO dto, AgeAverageRating entity) {
         entity.setAge(dto.getAge());
         entity.setRating(dto.getRating());
     }

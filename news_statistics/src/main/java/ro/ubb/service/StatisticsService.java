@@ -1,16 +1,18 @@
 package ro.ubb.service;
 
 import org.springframework.stereotype.Service;
-import ro.ubb.dto.AgeAverageRatingDto;
+import ro.ubb.dto.AgeAverageRatingDTO;
 import ro.ubb.dto.converter.AgeAverageRatingConverter;
+import ro.ubb.dto.converter.Converter;
+import ro.ubb.dto.converter.ConverterReflection;
 import ro.ubb.model.AgeAverageRating;
 import ro.ubb.model.NewsRating;
 import ro.ubb.model.User;
 import ro.ubb.service.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -18,9 +20,9 @@ import java.util.stream.Collectors;
 public class StatisticsService {
 
     Utils utils = new Utils();
-    AgeAverageRatingConverter converter = new AgeAverageRatingConverter();
+    ConverterReflection converter = new ConverterReflection();
 
-    public List<AgeAverageRatingDto> statisticsFromStudentsYoungerThan(int maxAge) {
+    public List<AgeAverageRatingDTO> statisticsFromStudentsYoungerThan(int maxAge) {
         List<NewsRating> newsRatingList = utils.populateNewsRating(utils.populateUsers());
 
         Predicate<NewsRating> ageFilter = newsRating -> {
@@ -33,7 +35,7 @@ public class StatisticsService {
     }
 
 
-    public List<AgeAverageRatingDto> statisticsFromStudentsOlderThan(int minAge) {
+    public List<AgeAverageRatingDTO> statisticsFromStudentsOlderThan(int minAge) {
         List<NewsRating> newsRatingList = utils.populateNewsRating(utils.populateUsers());
 
         Predicate<NewsRating> ageFilter = newsRating -> {
@@ -46,7 +48,7 @@ public class StatisticsService {
     }
 
 
-    public List<AgeAverageRatingDto> statisticsFromStudentsAgedBetween(int age1, int age2) {
+    public List<AgeAverageRatingDTO> statisticsFromStudentsAgedBetween(int age1, int age2) {
         List<NewsRating> newsRatingList = utils.populateNewsRating(utils.populateUsers());
 
         Predicate<NewsRating> ageFilter = newsRating -> {
@@ -72,9 +74,8 @@ public class StatisticsService {
     }
 
 
-    private List<Integer> extractAges(List<NewsRating> newsRatings) {
-        List<Integer> ages = newsRatings.stream().map(newsRating -> newsRating.getUser().getAge()).collect(Collectors.toList());
-        Collections.sort(ages);
+    private Set<Integer> extractAges(List<NewsRating> newsRatings) {
+        Set<Integer> ages = newsRatings.stream().map(newsRating -> newsRating.getUser().getAge()).collect(Collectors.toSet());
         return ages;
     }
 

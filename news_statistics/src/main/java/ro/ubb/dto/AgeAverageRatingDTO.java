@@ -7,14 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ro.ubb.model.annotations.MyObject;
 
+@MyObject
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
-public class AgeAverageRatingDto {
-    private Integer age;
-    private Double rating;
+public class AgeAverageRatingDTO {
+    public Integer age; //made public only to test reflection
+    public Double rating;
 }
